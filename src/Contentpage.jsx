@@ -3,7 +3,8 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import parse from "html-react-parser";
 import { AiOutlineMenu } from "react-icons/ai";
-
+import { BiChevronRight } from "react-icons/bi";
+import "./App.css";
 const Contentpage = () => {
   const [data, setData] = useState({});
 
@@ -13,8 +14,10 @@ const Contentpage = () => {
   const [content, setContent] = useState("");
 
   const [dropdown, setDropdown] = useState(true);
-  
-  const [show, setShow]=useState(true);
+
+  const [dropDownContent, setDropDownContent] = useState(null);
+
+  const [show, setShow] = useState(true);
 
   useEffect(() => {
     axios
@@ -33,7 +36,7 @@ const Contentpage = () => {
     getAPICALL();
   }, []);
 
-  console.log(usersList, "");
+  // console.log(usersList, "");
   async function getAPICALL() {
     const response = await fetch(`http://localhost:9000/content`, {
       method: "get",
@@ -53,53 +56,94 @@ const Contentpage = () => {
     setContent(items);
   };
 
-  const openDrop = () => {
+  const openDrop = (item) => {
+    console.log(item, "item kishore");
+    setDropDownContent(item);
     setDropdown(!dropdown);
   };
 
   let newContentsList = [];
   const contents =
     usersList &&
-    usersList?.map((each) =>
+    usersList?.map((each, index) =>
       each.subtitle?.map((item, index) => {
         newContentsList.push(item.content);
       })
     );
 
-  console.log(
-    newContentsList,
-    "newContentsListlkvmmmmmmmmmmmmmmmmmmmskdnvlksdgggggg"
-  );
+  // console.log(
+  //   newContentsList,
+  //   "newContentsListlkvmmmmmmmmmmmmmmmmmmmskdnvlksdgggggg"
+  // );
+
+  console.log(dropDownContent, "content");
 
   const htmlFromCMS = newContentsList;
-  console.log(htmlFromCMS, "dangerous html i am cms .........................");
-  console.log(content, "content=====>");
+  // console.log(htmlFromCMS, "dangerous html i am cms .........................");
+  // console.log(content, "content=====>");
   return (
     <div className="flex flex-row z-40 h-[100vh]  ">
-      <div className="lg:w-[250px] md:w-[150px] sm:w-[100px] bg-slate-50 md:h-[100vh] lg:h-[100vh] position-fixed overflow-scroll sm:h-[4vh]"
-      >
-       <p className="text-blue-700 p-2 " 
-          onClick={() => setShow(!show)}> <AiOutlineMenu style={{width:'25px', height:'25px' }} class=""/></p>
-        {" "}
-        { show ? 
-        <div>
-        {usersList?.map((item) => (
-          <div >
-            <div 
-              class="text-teal-900 text-8px px-2  "
-              
-              
-              onClick={() => openDrop()}
-            >
-              <p>{item.title}</p>
-            </div>
-           
-            {!dropdown ? (
-              <ul class="text-start text-blue-900 text-5px px-3 ">
-                <li>
-                  {item &&
-                    item?.subtitle?.map((each) => (
-                      <div>
+      <div className="lg:w-[250px] md:w-[150px] sm:w-[100px] bg-slate-50 md:h-[100vh] lg:h-[100vh] position-fixed overflow-scroll sm:h-[4vh] cursor-pointer">
+        <p className="text-blue-700 p-2 " onClick={() => setShow(!show)}>
+          {" "}
+          <AiOutlineMenu style={{ width: "25px", height: "25px" }} class="" />
+        </p>{" "}
+        {show ? (
+          <div>
+            {usersList?.map((item, index) => (
+              <div className="">
+                <div
+                  class="text-teal-900 text-8px px-2  flex flex-row"
+                  onClick={() => {
+                    openDrop(item);
+                  }}
+                >
+                  <div className="flex justify-between px-3 w-full">
+                    <p>{item.title}</p>
+                    <span>
+                      <BiChevronRight
+                        class="ang"
+                        style={{
+                          width: "25px",
+                          height: "25px",
+                          transform: "rotate(90deg)",
+                        }}
+                      />
+                    </span>{" "}
+                  </div>
+                </div>
+
+                {/* {!dropdown ? (
+                  <ul class="text-start text-blue-900 text-5px px-4 ">
+                    <li>
+                      {item &&
+                        item?.subtitle?.map((each, index) => (
+                          <div>
+                            <div
+                              onClick={(index) => {
+                                onSubmit(each.content);
+                                window.history.replaceState(
+                                  null,
+                                  "new title",
+                                  `/${each.subtitlename}/${each._id}`
+                                );
+                              }}
+                              class="py-1 px-3"
+                            >
+                              {each.subtitlename}
+                            </div>
+                          </div>
+                        ))}
+                    </li>
+                  </ul>
+                ) : null} */}
+
+                {!dropdown &&
+                  dropDownContent &&
+                  dropDownContent._id === item._id &&
+                  dropDownContent?.subtitle.map((each) => (
+                    <>
+                      <div className="text-blue-700  px-3">
                         <div
                           onClick={() => {
                             onSubmit(each.content);
@@ -109,30 +153,17 @@ const Contentpage = () => {
                               `/${each.subtitlename}/${each._id}`
                             );
                           }}
+                          class="py-1 px-3"
                         >
                           {each.subtitlename}
-                          {/* <Link to
-                      ={`/contentpage/${each._id}`}
-                      class="no-underline text-gray-800 text-xl">
-                   
-                      
-                    </Link> */}
                         </div>
-                        {/* <Link to
-                        ={`/contentpage/${each._id}`}
-                        class="no-underline text-gray-800 text-xl">
-                      
-                        {each.subtitlename} 
-                      </Link> */}
                       </div>
-                    ))}
-                </li>
-              </ul>
-            ) : null}
+                    </>
+                  ))}
+              </div>
+            ))}
           </div>
-        ))} </div> : null
-        }
-       
+        ) : null}
       </div>
       <div className="lg:ml-[280px] md:ml-[180px] sm:ml-[100px] text-center justify-center ">
         <div className="">

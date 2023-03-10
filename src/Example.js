@@ -300,7 +300,7 @@ const Example = () => {
   const [dropdown, setDropdown] = useState(true);
 
   const [show, setShow] = useState(true);
-
+   
   useEffect(() => {
     axios
       .get("http://localhost:9000/content")
@@ -353,20 +353,28 @@ const Example = () => {
 
   console.log(
     newContentsList,
-    "newContentsListlkvmmmmmmmmmmmmmmmmmmmskdnvlksdgggggg"
+    "newContentsListlkvmmmmmmmmmmmmmmmmmmmskdnvlksdgggg"
   );
 
   const htmlFromCMS = newContentsList;
   console.log(htmlFromCMS, "dangerous html i am cms .........................");
   console.log(content, "content=====>");
 
- 
+  const arr = contents;
+  const counts = {};
+
+  for (const num of arr) {
+    counts[num] = counts[num] ? counts[num] + 1 : 1;
+  }
+
+  console.log(counts);
+  console.log(counts[5], counts[2], counts[9], counts[4]);
 
   return (
     <div>
       Example
       <div className="flex flex-row z-40 h-[100vh]  ">
-        <div className="lg:w-[250px] md:w-[150px] sm:w-[100px] md:h-[100vh] bg-slate-50 lg:h-[100vh] position-fixed overflow-scroll sm:h-[4vh]">
+        <div className="lg:w-[250px] md:w-[150px] sm:w-[100px] bg-slate-50 lg:h-[100vh] position-fixed overflow-scroll sm:h-[4vh]">
           <p className="text-blue-700 p-2 " onClick={() => setShow(!show)}>
             {" "}
             <AiOutlineMenu style={{ width: "25px", height: "25px" }} class="" />
@@ -377,10 +385,10 @@ const Example = () => {
                 <div>
                   <div
                     class="text-teal-900 text-8px px-2  "
-                    onClick={() => openDrop()}
+                    onClick={() => openDrop( )}
                   >
                     <p>{item.title}</p>
-                    
+                    <p>{arr}</p>
                   </div>
 
                   {!dropdown ? (
